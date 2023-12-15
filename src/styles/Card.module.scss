@@ -1,0 +1,52 @@
+@import './variables.scss';
+
+.card{
+    width: 20%;
+    max-width: 25%;
+    position: relative;
+    background: $white;
+    box-shadow: 0px 0px 20px #00000021;
+    text-align: center;
+    flex-grow: 1;
+    padding-bottom: 50px;
+    >div{
+        padding: 6% 3%;
+    }
+    img{
+        width: 100%;
+        object-fit: contain;
+    }
+    a{
+        margin: auto;
+    }
+    h3{
+        text-transform: uppercase;
+        color: $black;
+        font-size: var(--font4);
+    }
+    p{
+        margin: var(--margin-30) 0;
+    }
+    a{
+        position: absolute;
+        left: 50%;
+        bottom: 6%;
+        transform: translateX(-50%);
+        margin: 0 auto;
+        box-shadow: unset;
+    }
+    @media (max-width:960px) {
+        width: 33%;
+        max-width: 50%;
+        padding-bottom: 60px;
+    }
+    @media (max-width:550px) {
+        a{
+            width: calc(94% - 40px);
+        }
+    }
+    @media (max-width:420px) {
+        width: 50%;
+        max-width: unset;
+    }
+}

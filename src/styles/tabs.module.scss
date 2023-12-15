@@ -1,0 +1,51 @@
+@import './variables.scss';
+
+.tab {
+  width: 100%;
+}
+.links{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: $white;
+  list-style: none;
+  padding-inline-start: 0px;
+  box-shadow: 0px 9px 20px #00000030;
+  border-bottom: 3px solid $purple;
+  border-image: $gradient-3 1;
+  overflow-y: scroll;
+  transition: top .1s;
+  top: 81px;
+  // height: 60px;
+  li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 60px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: var(--font6);
+    color: $purple;
+    padding: 0px 10px;
+    transition: color .3s, background .3s;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover{
+      color: $white;
+      background-color: $purple;
+    }
+    &.selected{
+      background-color: $purple;
+      color: $white;
+    }
+  }
+  @media (max-width:960px) {
+    justify-content: unset;
+    margin-top: 8px;
+    li{
+      height: 45px;
+    }
+  }
+}

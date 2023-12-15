@@ -1,0 +1,304 @@
+@import 'variables.scss';
+
+#firstSection {
+    position: relative;
+    max-height: 80vh;
+    overflow: hidden;
+}
+.svgDg{
+    width: 100%;
+    img{
+        width: 100%;
+        z-index: 1;
+        top: 0;
+    }
+}
+.bannerTablet{
+    display: none;
+    @media (max-width:960px) {
+        display: block;
+    }
+    @media (max-width:550px) {
+        display: none;
+    }
+}
+.bannerMobile{
+    display: none;
+    @media (max-width:550px) {
+        display: block;
+    }
+}
+.bannerDesk{
+    @media (max-width:960px) {
+        display: none;
+    }
+}
+.firstText{
+    width: fit-content;
+    max-width: 1300px;
+    height: max-content;
+    position: absolute;
+    inset: 0;
+    margin: 0 auto;
+    color: $white;
+    z-index: 1;
+    padding: 110px 3% 6%;
+    h1{
+        margin-bottom: var(--margin-30);
+        text-transform: uppercase;
+    }
+    p{
+        font-size: var(--font3);
+        color: $white;
+    }
+    a{
+        border: 2px solid $white;
+        color: $white;
+        margin-top: var(--margin-60);
+        &:hover{
+            box-shadow: 0 0 25px #f9fdfc;
+        }
+    }
+    @media (max-width:960px) {
+        p{
+            font-size: var(--font4);
+        }
+    }
+    @media (max-width:550px) {
+        margin: 100px auto auto;
+        p{
+            font-size: var(--font3);
+        }
+    }
+}
+.scrollDowns {
+    position: absolute;
+    right: 0;
+    bottom: 3%;
+    left: 0;
+    margin: 0 auto 13px;
+    width: 34px;
+    height: 55px;
+    box-shadow: 0 0 25px #2D37B3;
+    border-radius: 50px;
+    @media (max-width:960px) {
+        bottom: 15%;
+        box-shadow: 0 0 25px $white;
+    }
+    @media (max-width:550px) {
+        bottom: 5%;
+    }
+}
+.mousey {
+    width: 2px;
+    padding: 6px 15px;
+    height: 40px;
+    border: 2px solid #2D37B3;
+    border-radius: 25px;
+    opacity: 0.75;
+    box-sizing: content-box;
+    position: relative;
+    z-index: 2;
+    @media (max-width:960px) {
+        border: 2px solid $white;
+    }
+}
+.scroller {
+    width: 3px;
+    height: 10px;
+    border-radius: 25%;
+    background-color: #2D37B3;
+    animation-name: scroll;
+    animation-duration: 2.2s;
+    animation-iteration-count: infinite;
+    @media (max-width:960px) {
+        background-color: $white;
+    }
+}
+@keyframes scroll {
+	0% { opacity: 0; height:3px;}
+	5% { opacity: .7; height:3px;}
+	15% { transform: translateY(0); opacity: 1; height:15px;}
+	85% { transform: translateY(30px); opacity: 1; height:8px;}
+	100% { transform: translateY(30px); opacity: 0; height:3px;}
+}
+.row1{
+    display: flex;
+    gap: var(--margin-30);
+    article{
+        width: 25%;
+        flex-grow: 1;
+        h1{
+            margin: var(--margin-30);
+            color: $black;
+        }
+        p{
+            color: $black;
+            line-height: 30px;
+        }
+    }
+    @media (max-width:960px) {
+        flex-wrap: wrap;
+        article{
+            width: 27%;
+        }
+    }
+    @media (max-width:550px) {
+        article{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 50%;
+            div{
+                width: 50%;
+                h1{
+                    margin: 0;
+                }
+            }
+            img{
+                width: 100px;
+            }
+        }
+    }
+}
+.statsbar{
+    margin: var(--margin-30) 0;
+}
+.sliderContain{
+    width: 94% !important;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--margin-30);
+    align-items: center;
+}
+.imgCont{
+    width: 50%;
+    position: relative;
+    img{
+        position: relative;
+        display: block;
+        margin: auto;
+        z-index: 2;
+    }
+    &:before{
+        position: absolute;
+        content: '';
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('http://localhost:1337/uploads/compuesto_c87dc766f0.svg?updated_at=2022-05-19T21:46:12.280Z');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: top;
+        z-index: 0;
+    }
+    @media (max-width:960px) {
+        display: none;
+    }
+}
+.testimonials{
+    width: 50%;
+    text-align: center;
+    h2{
+        font-size: var(--font3);
+    }
+    @media (max-width:960px) {
+        width: 100%;
+        h2{
+            margin-bottom: var(--margin-30);
+        }
+    }
+}
+.slide{
+    // width: 100%;
+    padding: var(--margin-30);
+    display: flex;
+    flex-direction: column;
+    q{
+        color: $black;
+        font-size: var(--font5);
+    }
+    span{
+        color: $purple;
+        text-transform: capitalize;
+        margin: var(--margin-15);
+        font-size: var(--font5);
+    }
+    p{
+        color: #b0b0b0;
+        font-style: italic;
+        text-transform: capitalize;
+        font-size: var(--font6);
+    }
+}
+.products{
+    margin: var(--margin-60) 0;
+    gap: var(--margin-30);
+}
+.cardHome{
+    width: 42%;
+    max-width: 50%;
+    padding: 2% 3%;
+    box-shadow: 0px 0px 20px #00000021;
+    h2{
+        font-size: var(--font2);
+    }
+    p{
+        margin-top: var(--margin-30);
+    }
+    a{
+        margin-top: var(--margin-30);
+        float: right;
+    }
+    @media (max-width:960px) {
+        width: 100%;
+        max-width: unset;
+    }
+}
+.clientes{
+    padding: var(--margin-30) 0;
+    box-shadow: 0px 0px 21px #00000033;
+    background-color: $white;
+    img{
+        max-width: 250px;
+        margin: auto;
+    }
+}
+.listForm{
+    display: flex !important;
+    gap: var(--margin-30);
+    align-items: center;
+    @media (max-width:960px) {
+        flex-direction: column-reverse;
+    }
+}
+.titlePoint{
+    font-size: var(--font2);
+    margin-bottom: var(--margin-30);
+}
+.liStyled{
+    list-style: none;
+    padding-inline-start: 35px;
+    text-align: start;
+    li{
+        color: $black;
+        position: relative;
+        margin-bottom: var(--margin-30);
+        font-size: var(--font5);
+        &:before{
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            top: 0px;
+            left: -35px;
+            background: url('../images/check-blue.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
+            @media (max-width:960px) {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}

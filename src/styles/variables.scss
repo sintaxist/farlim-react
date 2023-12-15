@@ -1,0 +1,74 @@
+/********* Colores *********/
+
+$white: #FFFFFF;
+$black: #263575;
+$purple: #474DEF;
+$purple2: #19019C;
+$blue: #349eff;
+$turquiose: #51cbdc;
+$green: #51dcaa;
+$red: #ff0962;
+$gradient: linear-gradient(90deg, $turquiose 0%, $blue 100%);
+$gradient-2: linear-gradient(90deg, $green 18.17%, #afdc51 96.91%);
+$gradient-3: linear-gradient(to right, $purple, #6AD8FB);
+
+
+/************Tamaño Fuente************/
+
+$font1: 2.25rem;
+$font2: 2rem;
+$font3: 1.7rem;
+$font4: 1.5rem;
+$font5: 1.125rem;
+$font6: 1rem;
+$font7: 0.875rem;
+$font8: 0.6rem;
+
+$shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+
+:root{
+    --margin-15: 15px;
+    --margin-30: 30px;
+    --margin-60: 60px;
+
+    --font0: 2.5rem;
+    --font1: 2.25rem;
+    --font2: 2rem;
+    --font3: 1.7rem;
+    --font4: 1.5rem;
+    --font5: 1.125rem;
+    --font6: 1rem;
+    --font7: .9rem;
+    --font8: .9rem;
+}
+
+@media (max-width:960px) {
+    :root{
+        --margin-30: 15px;
+        --margin-60: 30px;
+
+        --font0: 2.25rem;
+        --font1: 2rem;
+        --font2: 1.7rem;
+        --font3: 1.5rem;
+        --font4: 1.125rem;
+        --font5: 1rem;
+        --font6: .9rem;
+        --font7: .8rem;
+        --font8: .8rem;
+    }
+}
+
+@media (max-width:550px) {
+    :root{
+        --font: 1.7rem;
+        --font1: 1.7rem;
+        --font2: 1.5rem;
+        --font3: 1.125rem;
+        --font4: 1rem;
+        --font5: .9rem;
+        --font6: .8rem;
+        --font7: .8rem;
+        --font8: .8rem;
+    }
+}

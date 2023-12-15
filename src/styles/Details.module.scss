@@ -1,0 +1,116 @@
+@import 'variables.scss';
+
+.firstPart{
+    display: flex;
+    flex-direction: row;
+    margin: 30px auto;
+    gap: var(--margin-60);
+    img{
+        object-fit: contain;
+        width: 40%;
+        height: auto;
+        min-width: 450px;
+    }
+    @media (max-width:960px) {
+        flex-direction: column;
+        img{
+            margin: auto;
+        }
+    }
+    @media (max-width:550px) {
+        img{
+            width: 100%;
+            max-width: unset;
+            min-width: unset;
+        }
+    }
+}
+.listContainer{
+    width: 60%;
+    h2{
+        font-size: var(--font3);
+        margin-bottom: var(--margin-30);
+    }
+    @media (max-width:960px) {
+        width: 100%;
+    }
+}
+.liStyled{
+    list-style: none;
+    padding-inline-start: 25px;
+    text-align: start;
+    li{
+        color: $black;
+        position: relative;
+        margin-bottom: var(--margin-30);
+        font-size: var(--font6);
+        &:before{
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            top: 4px;
+            left: -25px;
+            background: url('../images/check-blue.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+    }
+}
+.divCTA{
+    display: flex;
+    justify-content: center;
+    gap: var(--margin-30);
+    align-items: center;
+    margin: var(--margin-30) 0;
+    @media (max-width:550px) {
+        flex-direction: column;
+    }
+}
+.description{
+    h3, h2{
+        font-size: var(--font3);
+    }
+    p{
+        font-size: var(--font6);
+        color: $black;
+        margin: var(--margin-30) 0;
+    }
+}
+.specsF{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--margin-30);
+    margin: var(--margin-60) 0;
+}
+.specs{
+    width: 25% !important;
+    text-align: center;
+    flex-grow: 1;
+    h5{
+        width: 100%;
+        display: inline-block;
+        position: relative;
+        padding: 0px 0px 10px;
+        font-size: var(--font5);
+        margin-bottom: var(--margin-30);
+        &::before{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            border-radius: 50px;
+            background: linear-gradient(45deg, $purple , #84c7fe);
+        }
+    }
+    p{
+        font-size: var(--font6);
+        color: $black;
+    }
+    @media (max-width:750px) {
+        width: 100% !important;
+    }
+}

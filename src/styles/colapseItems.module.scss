@@ -1,0 +1,118 @@
+@import './variables.scss';
+
+.accordion{
+    position: relative;
+    max-width:900px;
+    margin: var(--margin-60) auto;
+    box-shadow: 0px 0px 20px #00000070;
+    z-index: 3;
+}
+.p{
+    margin-top: var(--margin-30);
+    a{
+        position: relative;
+        color: $blue;
+        text-transform: lowercase;
+        font-weight: bold;
+        text-decoration: none;
+        &:before{
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 0%;
+          height: 2px;
+          background: $gradient-3;
+          transition: all .3s;
+        }
+        &:hover{
+          &::before{
+            width: 100%;
+          }
+        }
+      }
+}
+.item{
+    background-color: $white;
+    // margin-bottom: 5px;
+}
+.title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $white;
+    text-align: left;
+    background: $purple;
+    padding: 10px 3%;
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    h2{
+        font-weight: bold;
+        z-index: 2;
+    }
+    span{
+        font-size: $font2;
+        font-weight: bold;
+        z-index: 2;
+    }
+    &::before{
+        content: '';
+        background: $gradient-3;
+        width: 100%;
+        opacity: 0;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        transition: all .3s;
+    }
+}
+.titulo{
+    transition: all .3s;
+}
+.titulo.activo{
+    color: $white;
+}
+.title.active{
+    color: $white;
+    &::before{
+        opacity: 1;
+    }
+}
+.content{
+    height: 0;
+    overflow: hidden;
+    transition: all .2s;
+    padding: 0px 3%;
+    background-color: $white;
+}
+.content.show{
+    height: auto;
+    max-height: 9999px;
+    padding: 30px 3%;
+}
+@media screen and(max-width: 960px){
+    .titulo{
+        font-size: $font5;
+    }
+    .title{
+        span{
+            font-size: $font3;
+        }
+    }
+    .content{
+        p{
+            font-size: $font7;
+        }
+    }
+    .content.show{
+        padding: 15px 3%;
+    }
+}
+@media screen and(max-width: 550px){
+    .titulo{
+        font-size: $font6;
+    }
+}
