@@ -65,15 +65,14 @@ export const NavLink = styled(Link)`
     left: 0;
     height: 2px;
     background: #fff;
-    width: 100%;
+    width: 0;
     transform-origin: center;
-    transform: scaleX(0);
     transition: all .3s;
     border-radius: 50px;
   }
   &:hover{
       &:before{
-          transform: scaleX(1);
+        width: 100%;
       }
   }
   @media(max-width: 960px){

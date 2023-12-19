@@ -1,26 +1,29 @@
 import React from 'react';
-import { urlAdmin } from './httpClient';
 import { Button, FlechaButton } from './UseElements';
 
 import styles from '../../styles/Card.module.scss'
 
-export function ProductCard({product}){
+export function ProductCard({ product, id }) {
 
-    // console.log()
-    return(
+    const { Imagen, Nombre, Precio, Presentacion } = product
+
+    return (
         <div className={styles.card}>
-            <img src={urlAdmin + product.attributes.image.data.attributes.url} alt="product" />
+            <img src={Imagen.data.attributes.url} alt="product" />
             <div>
-                <h3>{product.attributes.name}</h3>
-                <p>
-                    {product.attributes.size.map(p => (
-                        <span key={p.id}> {p.elemento}</span>
-                    ))}
-                    &nbsp;litros
-                </p>
-                <Button className={`${product.attributes.colorLink} ${product.attributes.styleLink}`} to={"/producto/" + product.id}>
+                <div className={styles.content}>
+                    <h3>{Nombre}</h3>
+                    <h4>${Precio}</h4>
+                    <p>
+                        {Presentacion.map(p => (
+                            <span key={p.id}>{p.Elemento}</span>
+                        ))}
+                        &nbsp;litros
+                    </p>
+                </div>
+                <Button className={`gradient fill`} to={"/producto/" + id}>
                     ver más
-                    <FlechaButton/>
+                    <FlechaButton />
                 </Button>
             </div>
         </div>

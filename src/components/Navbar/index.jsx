@@ -16,19 +16,69 @@ import {
 
 import {getContent, urlAdmin} from '../utils/httpClient';
 
+const getDefaultUrl = (data) => (data && data.attributes && data.attributes.url) || '';
+
+const getDefaultMobile = (logo) => (logo && logo.Mobile) || { data: { attributes: { url: '' } } };
+const getDefaultDesktop = (logo) => (logo && logo.Desktop) || { data: { attributes: { url: '' } } };
+
+const getDefaultLinks = (menu) => (menu && menu.Links) || [];
+
+const getLogoUrls = (logo) => {
+  const mobile = getDefaultMobile(logo);
+  const desktop = getDefaultDesktop(logo);
+
+  return {
+    mobileUrl: getDefaultUrl(mobile.data),
+    desktopUrl: getDefaultUrl(desktop.data),
+  };
+};
+
+const getNavbarContent = (content) => {
+  const {
+    data: {
+      id,
+      attributes: {
+        Whatsapp,
+        Logo,
+        Menu,
+      } = {},
+    } = {},
+  } = content || {};
+
+  const { mobileUrl, desktopUrl } = getLogoUrls(Logo);
+
+  const links = getDefaultLinks(Menu);
+
+  return {
+    id,
+    Whatsapp,
+    mobileUrl,
+    desktopUrl,
+    links,
+  };
+};
+
 function Navbar() {
 
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState({});
+  const [clicked, setClicked] = useState(false);
 
   useEffect(() =>{
-    getContent('header?populate=*').then((data) => {
-        setContent(data)
-    });
+    getContent('menu-header?populate=Logo.Mobile,Logo.Desktop,Menu.Links')
+      .then((data) => {
+        setContent(data);
+      });
   }, [])
 
-  const [clicked, setClicked] = useState(false);
+  const {
+    id,
+    Whatsapp,
+    mobileUrl,
+    desktopUrl,
+    links,
+  } = getNavbarContent(content);
+
   const handleClick = () => {
-    //cuando esta true lo pasa a false y vice versa
     setClicked(!clicked)
   }
 
@@ -62,23 +112,23 @@ function Navbar() {
       <NavContainer className='widthBreak'>
 
         <LogoLink to='/'>
-          <Logo src={urlAdmin + content?.data?.attributes.image.data.attributes.url} alt="logo" />
-          <LogoMobile src={urlAdmin + content?.data?.attributes.imgMobile.data.attributes.url} alt="logo-mobile" />
+          <Logo src={desktopUrl} alt="logo" />
+          <LogoMobile src={mobileUrl} alt="logo-mobile" />
         </LogoLink>
 
         <LinkContainer>
-          {content?.data?.attributes.links.data.map(link =>(
-            <NavLink key={link.id} to={link.attributes.link}>
-              {link.attributes.linkName}
+          {links.filter(link => link.Show).map(link =>(
+            <NavLink key={link.id} to={link.Path}>
+              {link.Name}
             </NavLink>
           ))}
         </LinkContainer>
 
         <LinksMobile className={`${clicked ? 'active' : ''}`}>
           <NavLink to='/' onClick={handleClick}>inicio</NavLink>
-          {content?.data?.attributes.links.data.map(link =>(
-            <NavLink key={link.id} to={link.attributes.link} onClick={handleClick}>
-              {link.attributes.linkName}
+          {links.filter(link => link.Show).map(link =>(
+            <NavLink key={link.id} to={link.Path}>
+              {link.Name}
             </NavLink>
           ))}
         </LinksMobile>
