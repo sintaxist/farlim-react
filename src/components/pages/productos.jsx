@@ -1,56 +1,53 @@
-import React, { Component } from "react";
-
+import React, { useState, useEffect } from "react";
 import Tabs from "../utils/Tabs";
 import Panel from "../utils/Panel";
-
-import { API } from "../utils/httpClient";
 import { ProductCard } from '../utils/productCard';
 import { ProductContain } from "../utils/UseElements";
+import { getContent } from "../utils/httpClient";
+import { OverlayLoader } from "./overlayLoading";
 
-class Productos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { data: [], userId: 4, array: [5, 1, 3, 4, 6] };
-  }
+const Productos = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  componentDidMount() {
-    fetch(API + 'categories?populate=productos.image,productos.size')
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            data: result,
-          });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
+  useEffect(() => {
+    getContent('categorias?populate=productos.Imagen,productos.Presentacion').then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }, []);
 
-  render() {
+  const { data: categorias } = data || { data: [] };
 
-    const { data } = this.state;
+  console.log(categorias);
 
-    return (
-      <div>
-        <Tabs className='hidden'>
-          {data?.data?.map(elem => (
-
-            <Panel key={elem.id} title={elem.attributes.nombre}>
-              <h1 className="title h1-title gradient title-tabs">{elem.attributes.nombre}</h1>
-              <ProductContain>
-                {elem?.attributes?.productos?.data?.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </ProductContain>
-            </Panel>
-
-          ))}
-        </Tabs>
-      </div>
-    );
-  }
-}
+  return (
+    <>
+      <OverlayLoader loading={loading} />
+      {data && (
+        <div>
+          <Tabs className='hidden'>
+            {
+              categorias.map((elem) =>
+                <Panel key={elem.id} title={elem.attributes.Nombre}>
+                  <h1 className="title h1-title gradient title-tabs">
+                    {elem.attributes.nombre}
+                  </h1>
+                  <ProductContain>
+                    {elem?.attributes?.productos?.data?.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product.attributes}
+                      />
+                    ))}
+                  </ProductContain>
+                </Panel>
+              )}
+          </Tabs>
+        </div>
+      )}
+    </>
+  );
+};
 
 export default Productos;

@@ -1,71 +1,75 @@
 import React, { useEffect, useState } from "react";
-import { getContent, urlAdmin } from "../utils/httpClient";
+import { getContent } from "../utils/httpClient";
 import { CategoryContain, Content } from "../utils/UseElements";
 
 import styles from '../../styles/farlimPage.module.scss';
+import { OverlayLoader } from "./overlayLoading";
+import ReactMarkdown from "react-markdown";
 
 export default function QuienesSomos() {
 
     const [content, setContent] = useState(null);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getContent('farlim-page?populate=titulo1.show,cards.title,,titulo2.show,valores.img').then((data) => {
+        getContent('quienes-somo?populate=Titulo,Cards.Titulo,Titulo2,Valores.Imagen').then((data) => {
             setContent(data)
+            setLoading(false);
         })
     }, [])
 
-    const info = content?.data?.attributes;
+    const { data } = content || {};
+    const attributes = data?.attributes || {};
+
+    const { Titulo, Cards, Titulo2, Valores, Descripcion } = attributes || {};
 
     return (
         <>
-            {info?.show ? (
+            <OverlayLoader loading={loading} />
 
+            {
+                content &&
                 <>
+                    {
+                        Titulo &&
+                        <Content className={`${styles.content} unsetBot margin100`}>
 
-                    <Content className={`${styles.content} unsetBot margin100`}>
+                            <h1 className={`${Titulo.Color} title h1-title`}>{Titulo.Titulo}</h1>
 
-                        {info?.titulo1.show ? (
-                            <h1 className={`${info?.titulo1.color} title h1-title`}>{info?.titulo1.titulo}</h1>
-                        ) : null}
+                            <ReactMarkdown>{Descripcion}</ReactMarkdown>
 
-                        <p>{info?.texto1}</p>
+                            {/* <p>{Descripcion}</p> */}
 
-                        <p>{info?.texto2}</p>
-
-                    </Content>
+                        </Content>
+                    }
 
                     <section className="back-skew change">
                         <Content className={`${styles.content} secondPa`}>
                             <CategoryContain>
-                                {info?.cards.map(card => (
-                                    card.show ? (
+                                {
+                                    Cards.map(card =>
                                         <div key={card.id} className={styles.card}>
-                                            <h2 className={`${card.title.color} title h2-title title-before`}>{card.title.titulo}</h2>
-                                            <p>{card.description}</p>
+                                            <h2 className={`${card.Titulo.Color} title h2-title title-before`}>{card.Titulo.Titulo}</h2>
+                                            <p>{card.Descripcion}</p>
                                         </div>
-                                    ) : null
-                                ))}
+                                    )}
                             </CategoryContain>
 
-                            {info?.titulo2.show ? (
-                                <h1 className={`${info?.titulo2.color} title h1-title`}>{info?.titulo2.titulo}</h1>
-                            ) : null}
+                            {Titulo2 && <h1 className={`${Titulo2.Color} title h1-title`}>{Titulo2.Titulo}</h1>}
 
                             <CategoryContain>
-                                {info?.valores.map(valor => (
-                                    valor.show ? (
+                                {
+                                    Valores.map(valor =>
                                         <div key={valor.id} className={styles.valor}>
-                                            <h3>{valor.title}</h3>
-                                            <img src={urlAdmin + valor.img.data.attributes.url} alt={`valor-${valor.id}`} />
+                                            <h3>{valor.Titulo}</h3>
+                                            <img src={valor.Imagen.data.attributes.url} alt={`valor-${valor.id}`} />
                                         </div>
-                                    ) : null
-                                ))}
+                                    )}
                             </CategoryContain>
                         </Content>
                     </section>
                 </>
-
-            ) : <p>No info available</p>}
+            }
         </>
     )
 } 

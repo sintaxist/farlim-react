@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getContent, urlAdmin } from '../utils/httpClient';
+import { getContent } from '../utils/httpClient';
 
 import styles from '../../styles/Home.module.scss';
 import { Button, CategoryContain, Content, FlechaButton, ProductContain } from '../utils/UseElements';
@@ -10,32 +10,66 @@ import OwlCarousel from 'react-owl-carousel';
 import { ProductCard } from '../utils/productCard';
 import { CategoryCard } from '../utils/categoryCard';
 import PostForm from '../form';
+import { OverlayLoader } from './overlayLoading';
 
 const Home = () => {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true)
 
-  let queryBanner = "Banner,Banner.Desktop,Banner.Tablet,Banner.Mobile,Banner.Button,"
-  let queryNumeralia = "Numeralia,Numeralia.Titulo,Numeralia.Numero.Imagen,"
-  let queryTestimonios = "Testimonios.Imagen,Testimonios.Testimonio,Testimonios.Titulo,"
-  let queryProductos = "Destacados,Destacados.Titulo,Destacados.productos,Destacados.productos.Imagen,Destacados.productos.Presentacion,Destacados.Button,"
-  let queryCategorias = "Categorias.Titulo,Categorias.Button,Categorias.categorias.Imagen,"
-  let queryCarrusel = "Carrusel.Titulo,Carrusel.Imagenes,"
+  const sections = [
+    "Banner",
+    "Numeralia",
+    "Testimonios",
+    "Destacados",
+    "Categorias",
+    "Carrusel",
+    "Formulario",
+    "Cards",
+  ];
+  
+  const properties = {
+    Banner: ["Desktop", "Tablet", "Mobile", "Button"],
+    Numeralia: ["Titulo", "Numero.Imagen"],
+    Testimonios: ["Imagen", "Testimonio", "Titulo"],
+    Destacados: ["Titulo", "productos", "productos.Imagen", "productos.Presentacion", "Button"],
+    Categorias: ["Titulo", "Button", "categorias.Imagen"],
+    Carrusel: ["Titulo", "Imagenes"],
+    Formulario: ["Titulo", "Points"],
+    Cards: ["Titulo", "Button"],
+  };
+  
+  const buildQuery = (section, properties) => {
+    const sectionProperties = properties[section].map(property => `${section}.${property}`);
+    return `${section},${sectionProperties.join(",")},`;
+  };
+  
+  const queries = sections.map(section => buildQuery(section, properties));
+  
+  const fullUrlQuery = `homepage?populate=${queries.join("")}`;
 
   useEffect(() => {
-    !data && getContent(`homepage?populate=${
-      queryBanner +
-      queryNumeralia +
-      queryTestimonios +
-      queryProductos +
-      queryCategorias +
-      queryCarrusel
-      }cards,cards.title,cards.link,section,section.img,section.img.img,section.title,section.titlePoints,section.points`)
-      .then((data) => {
-        setData({ data });
-      });
-  }, [])
+    if (!data) {
+      getContent(fullUrlQuery)
+        .then((responseData) => {
+          setData(responseData);
+          setLoading(false);
+        });
+    }
+  }, [data, fullUrlQuery]);
 
-  const info = data?.data?.data?.attributes;
+  const { data: responseData } = data || {};
+  const attributes = responseData?.attributes || {};
+
+  const {
+    Banner,
+    Numeralia,
+    Testimonios,
+    Destacados,
+    Categorias,
+    Carrusel,
+    Formulario,
+    Cards,
+  } = attributes || {};
 
   const options = {
     loop: true,
@@ -72,29 +106,30 @@ const Home = () => {
 
   return (
     <>
+      <OverlayLoader loading={loading}/>
       {
-        info?.Banner?.Show &&
+        Banner && Banner.Show &&
         <section id={styles.firstSection}>
 
           <div className={styles.svgDg}>
 
-            <img className={styles.bannerDesk} src={info?.Banner?.Desktop?.data?.attributes?.url} alt="banner-desk" />
+            <img className={styles.bannerDesk} src={Banner.Desktop.data.attributes.url} alt="banner-desk" />
 
-            <img className={styles.bannerTablet} src={info?.Banner?.Tablet?.data?.attributes?.url} alt="banner-tablet" />
+            <img className={styles.bannerTablet} src={Banner.Tablet.data.attributes.url} alt="banner-tablet" />
 
-            <img className={styles.bannerMobile} src={info?.Banner?.Mobile?.data?.attributes?.url} alt="banner-mobile" />
+            <img className={styles.bannerMobile} src={Banner.Mobile.data.attributes.url} alt="banner-mobile" />
 
           </div>
 
           <article className={styles.firstText}>
 
-            <h1>{info?.Banner?.Titulo}</h1>
-            <p>{info?.Banner?.Descripcion}</p>
+            <h1>{Banner.Titulo}</h1>
+            <p>{Banner.Descripcion}</p>
 
             {
-              info?.Banner?.Button &&
-              <Button className={`${info?.Banner?.Button?.Color} ${info?.Banner?.Button?.Style}`} to={info?.Banner?.Button?.Path}>
-                {info?.Banner?.Button?.Titulo}
+              Banner.Button &&
+              <Button className={`${Banner.Button.Color} ${Banner.Button.Style}`} to={Banner.Button.Path}>
+                {Banner.Button.Titulo}
                 <FlechaButton />
               </Button>
             }
@@ -111,15 +146,15 @@ const Home = () => {
       }
 
       {
-        info?.Numeralia?.Show &&
+        Numeralia && Numeralia.Show &&
         <section className={styles.firstSection}>
 
           <Content>
 
-            <h1 className={info?.Numeralia?.Titulo?.Color + ' title h1-title'}>{info?.Numeralia?.Titulo?.Titulo}</h1>
+            <h1 className={Numeralia.Titulo.Color + ' title h1-title'}>{Numeralia.Titulo.Titulo}</h1>
 
             <div className={`${styles.row1} ${styles.statsbar}`}>
-              {info?.Numeralia?.Numero.filter(card => card.Show).map(numero => (
+              {Numeralia.Numero.filter(card => card.Show).map(numero => (
                 <article className={`white-div stat${numero.id}`} key={numero.id}>
                   <img src={numero.Imagen.data.attributes.url} alt="" />
                   <div>
@@ -136,18 +171,18 @@ const Home = () => {
       }
 
       {
-        info?.Testimonios.Show &&
+        Testimonios && Testimonios.Show &&
         <div className={`${styles.sliderContain} white-div`}>
           <div className={styles.imgCont}>
-            <img src={info?.Testimonios?.Imagen.data.attributes.url} alt="Imagen Testimonios" />
+            <img src={Testimonios.Imagen.data.attributes.url} alt="Imagen Testimonios" />
           </div>
 
           <div id='testimonials' className={styles.testimonials}>
 
-            <h2 className={`title ${info?.Testimonios.Titulo.Color}`}>{info?.Testimonios.Titulo.Titulo}</h2>
+            <h2 className={`title ${Testimonios.Titulo.Color}`}>{Testimonios.Titulo.Titulo}</h2>
 
             <OwlCarousel className='owl-carousel owl-theme' {...options}>
-              {info?.Testimonios.Testimonio.filter(child => child.Show).map(testimonio => (
+              {Testimonios.Testimonio.filter(child => child.Show).map(testimonio => (
                 <div className={styles.slide} key={testimonio.id}>
                   <q>{testimonio.Descripcion}</q>
                   <span>{testimonio.Nombre}, {testimonio.Edad} años</span>
@@ -160,18 +195,19 @@ const Home = () => {
         </div>
       }
 
-      {info?.Destacados.Show &&
+      {
+        Destacados && Destacados.Show &&
         (<section className={`${styles.productosDestacados} back-skew`}>
           <Content>
-            <h1 className={info?.Destacados.Titulo.Color + ' title h1-title'}>{info?.Destacados.Titulo.Titulo}</h1>
+            <h1 className={Destacados.Titulo.Color + ' title h1-title'}>{Destacados.Titulo.Titulo}</h1>
             <ProductContain>
-              {info?.Destacados?.productos?.data.map(product => (
-                <ProductCard key={product.id} product={product?.attributes} id={product.id}/>
+              {Destacados.productos.data.map(product => (
+                <ProductCard key={product.id} product={product.attributes} id={product.id} />
               ))}
             </ProductContain>
-            {info.Destacados.Button &&
-              <Button className={`${info?.Destacados.Button.Style} ${info?.Destacados.Button.Color} linkProd`} to={info?.Destacados.Button.Path}>
-                {info?.Destacados.Button.Titulo}
+            {Destacados.Button &&
+              <Button className={`${Destacados.Button.Style} ${Destacados.Button.Color} linkProd`} to={Destacados.Button.Path}>
+                {Destacados.Button.Titulo}
                 <FlechaButton />
               </Button>
             }
@@ -179,69 +215,73 @@ const Home = () => {
         </section>)
       }
 
-      {info?.Categorias.Show &&
+      {
+        Categorias && Categorias.Show &&
         <section className={styles.categorias}>
           <Content className='unsetPa'>
-            <h1 className={info.Categorias.Titulo.Color + ' title h1-title'}>{info.Categorias.Titulo.Titulo}</h1>
+            <h1 className={Categorias.Titulo.Color + ' title h1-title'}>{Categorias.Titulo.Titulo}</h1>
             <CategoryContain>
-              {info?.Categorias?.categorias?.data.map(category => (
-                <CategoryCard key={category.id} category={category.attributes} id={category.id}/>
+              {Categorias.categorias.data.map(category => (
+                <CategoryCard key={category.id} category={category.attributes} id={category.id} />
               ))}
             </CategoryContain>
           </Content>
-            <Button className={`${info?.Categorias.Button.Style} ${info?.Categorias.Button.Color} linkHome`} to={info?.Categorias.Button.Path}>
-              {info?.Categorias.Button.Titulo}
-              <FlechaButton />
-            </Button>
+          <Button className={`${Categorias.Button.Style} ${Categorias.Button.Color} linkHome`} to={Categorias.Button.Path}>
+            {Categorias.Button.Titulo}
+            <FlechaButton />
+          </Button>
         </section>
       }
 
       <section className='back-skew margin30 back-top'>
         {
-          info?.Carrusel.Show &&
+          Carrusel && Carrusel.Show &&
           <>
             <Content className='unsetPa'>
-              <h1 className={`${info?.Carrusel.Titulo.Color} title h1-title title-section`}>{info?.Carrusel.Titulo.Titulo}</h1>
+              <h1 className={`${Carrusel.Titulo.Color} title h1-title title-section`}>{Carrusel.Titulo.Titulo}</h1>
             </Content>
             <OwlCarousel className={`${styles.clientes} owl-carousel owl-theme`} {...options2}>
-              {info?.Carrusel?.Imagenes?.data.map(img => 
-                <img key={img.id} src={img.attributes.url} alt={`img-${img.id}`} />
-              )}
+              {Carrusel.Imagenes.data.map((img) => (
+                <img
+                  key={img.id}
+                  src={img.attributes.url}
+                  alt={`img-${img.id}`}
+                />
+              ))}
             </OwlCarousel>
           </>
         }
-        {/* <Content className={styles.listForm}>
-          <PostForm />
-          <div>
-            <h2 className={`${info?.section.titlePoints.color} title ${styles.titlePoint}`}>{info?.section.titlePoints.titulo}</h2>
-            <ul className={styles.liStyled}>
-              {info?.section.points.map(li => (
-                <li key={li.id} className={`${li.color} li`}>{li.elemento}</li>
-              ))}
-            </ul>
-          </div>
-        </Content> */}
+        {
+          Formulario &&
+          <Content className={styles.listForm}>
+            {Formulario.ShowForm && <PostForm />}
+            <div>
+              <h2 className={`${Formulario.Titulo.Color} title ${styles.titlePoint}`}>{Formulario.Titulo.Titulo}</h2>
+              <ul className={styles.liStyled}>
+                {Formulario.Points.map(li => (
+                  <li key={li.id} className={`white li`}>{li.Elemento}</li>
+                ))}
+              </ul>
+            </div>
+          </Content>
+        }
       </section>
 
-      {/* <Content>
+      <Content>
         <CategoryContain>
-          {info?.cards.map(card => (
-            card.show ? (
-              <div key={card.id} className={styles.cardHome}>
-                <h2 className={`${card.title.color} title`}>{card.title.titulo}</h2>
-                <p>{card.description}</p>
-                {card.link.show ? (
-                  <Button className={`${card.link.style} ${card.link.color}`} to={card.link.pathLink}>
-                    {card.link.titleLink}
-                    <FlechaButton />
-                  </Button>
-                ) : null}
-              </div>
-            ) : null
-          ))
-          }
+          {
+            Cards && Cards.map(card =>
+            <div key={card.id} className={styles.cardHome}>
+              <h2 className={`${card.Titulo.Color} title`}>{card.Titulo.Titulo}</h2>
+              <p>{card.Descripcion}</p>
+              <Button className={`${card.Button.Style} ${card.Button.Color}`} to={card.Button.Path}>
+                {card.Button.Titulo}
+                <FlechaButton />
+              </Button>
+            </div>
+          )}
         </CategoryContain>
-      </Content> */}
+      </Content>
 
     </>
   );
@@ -251,25 +291,25 @@ export default Home;
 
 
 // Acceder a todas las sucategorias o hijos del objeto
-// http://localhost:1337/api/datos?populate=imgNumber,componentName
-// http://localhost:1337/api/datos?populate=*
+// http://localhost:1337/api/datospopulate=imgNumber,componentName
+// http://localhost:1337/api/datospopulate=*
 
 // Obtener unicamnete la categoria o nombre que se esta pidiendo en la url
-// http://localhost:1337/api/datos?fields=name
+// http://localhost:1337/api/datosfields=name
 
 // Llamar unicamente los datos que necesito
-// http://localhost:1337/api/datos?fields=name,publisehdAt&populate=imgNumber
+// http://localhost:1337/api/datosfields=name,publisehdAt&populate=imgNumber
 
 //Llamar una sola categoria
-// http://localhost:1337/api/categories/1?fields=name&populate=restaurants
+// http://localhost:1337/api/categories/1fields=name&populate=restaurants
 
-//Cambiar el orden???
-// http://localhost:1337/api/categories?fields=name&sort=name
+//Cambiar el orden
+// http://localhost:1337/api/categoriesfields=name&sort=name
 
 
 //Filtrar por Numeros
-// http://localhost:1337/api/restaurants?filters=[avgPrice][$lte]=30 equal
-// http://localhost:1337/api/restaurants?filters=[avgPrice][$lt]=30 less
+// http://localhost:1337/api/restaurantsfilters=[avgPrice][$lte]=30 equal
+// http://localhost:1337/api/restaurantsfilters=[avgPrice][$lt]=30 less
 // https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/filtering-locale-publication.html#filtering
 
-// /api/homepage?populate=body.numero.image
+// /api/homepagepopulate=body.numero.image

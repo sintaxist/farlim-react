@@ -2,7 +2,6 @@ import React from 'react'
 import Navbar from './components/Navbar';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './components/pages';
-import { ProductDetail } from './components/pages/productDetails';
 import { Footer } from './components/footer';
 import ScrollToTop from './components/utils/ScrollToTop';
 import './styles/App.scss'
@@ -13,6 +12,7 @@ import Faqs from './components/pages/faq';
 import Capacitate from './components/pages/capacitate';
 import Contacto from './components/pages/contacto';
 import Productos from './components/pages/productos';
+import { ProductDetail } from './components/pages/productDetails';
 
 function App () {
 

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 
 export const Content = styled.div`
@@ -278,3 +278,40 @@ export const CategoryContain = styled.div`
         gap: 15px;
     }
 `
+
+const pulse = keyframes` 
+    0% {
+        transform: scale(0.95);
+    }
+
+    70% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(0.95);
+    }
+`
+
+export const OverlayLoading = styled.div`
+    width: 100vw;
+    height: 100vh;
+    background-color: #F9FDFC;
+    position: fixed;
+    top: 0;
+    left: 0%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: ${({ loading }) => (loading === "true"? '1' : '0')};
+    transition: opacity 0.2s ease-out; 
+
+    img {
+        width: 90%;
+        max-width: 200px;
+        min-width: 220px;
+        transform: scale(1);
+        animation: ${pulse} 2s infinite;
+    }
+`;

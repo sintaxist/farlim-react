@@ -14,7 +14,7 @@ import {
   Overlay
 } from './NavbarElements';
 
-import {getContent, urlAdmin} from '../utils/httpClient';
+import {getContent} from '../utils/httpClient';
 
 const getDefaultUrl = (data) => (data && data.attributes && data.attributes.url) || '';
 
@@ -71,8 +71,7 @@ function Navbar() {
   }, [])
 
   const {
-    id,
-    Whatsapp,
+    // Whatsapp,
     mobileUrl,
     desktopUrl,
     links,
@@ -127,7 +126,7 @@ function Navbar() {
         <LinksMobile className={`${clicked ? 'active' : ''}`}>
           <NavLink to='/' onClick={handleClick}>inicio</NavLink>
           {links.filter(link => link.Show).map(link =>(
-            <NavLink key={link.id} to={link.Path}>
+            <NavLink key={link.id} to={link.Path} onClick={handleClick}>
               {link.Name}
             </NavLink>
           ))}
