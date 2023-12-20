@@ -49,7 +49,7 @@ const Categoria = () => {
           <p>{Descripcion}</p>
           <CategoryContain>
             {dataCategorias.map((category) => (
-              <CategoryCard key={category.id} category={category.attributes} />
+              <CategoryCard key={category.id} category={category.attributes} id={category.id}/>
             ))}
           </CategoryContain>
         </Content>
