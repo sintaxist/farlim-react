@@ -29,7 +29,6 @@ function App () {
             <Route path="categorias" element={<Categoria />}></Route>
             <Route path="quienes-somos" element={<QuienesSomos />}></Route>
             <Route path="contacto" element={<Contacto />}></Route>
-            <Route path="clientes" element={<Categoria />}></Route>
             <Route path="faq" element={<Faqs />}></Route>
             <Route path="capacitate" element={<Capacitate />}></Route>
             <Route path="productos" element={<Productos />}></Route>

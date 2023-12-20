@@ -1,67 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CategoryCard } from "../utils/categoryCard";
-import { urlAdmin } from "../utils/httpClient";
+import { getContent } from "../utils/httpClient";
 import { CategoryContain, Content } from "../utils/UseElements";
+import { OverlayLoader } from "./overlayLoading";
 
-export default class Categoria extends React.Component {
+const Categoria = () => {
 
-  state = {
-    datos: [],
-    error: null,
-  };
+  const [content, setContent] = useState(null);
+  const [categorias, setCategorias] = useState(null)
+  const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-  componentDidMount = async () => {
-
-    const parseJSON = resp => (resp.json ? resp.json() : resp);
-
-    const checkStatus = resp => {
-      if (resp.status >= 200 && resp.status < 300) {
-        return resp;
-      }
-      return parseJSON(resp).then(resp => {
-        throw resp;
-      });
-    };
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-
-    try {
-      const datos = await fetch(urlAdmin + '/api/categoria?populate=title,categories.image', {
-        method: 'GET',
-        headers: headers,
+  const fetchData = async () => {
+    try{
+      await getContent('categorias-page?populate=*').then((data) => {
+        setContent(data)
+        setLoading(false);
       })
-        .then(checkStatus)
-        .then(parseJSON);
-      this.setState({ datos });
-    } catch (error) {
-      this.setState({ error });
+      await getContent('categorias?populate=*').then((data) => {
+        setCategorias(data)
+        setLoading(false);
+      })
+    }catch (e){
+      console.error(e)
+    }finally{
+      content && categorias && setLoading(false)
     }
-  };
+  }
 
-  render() {
-    const { error, datos } = this.state;
+  const { data } = content || { data: null };
+  const attributes = data?.attributes || {};
 
+  const { Titulo, Descripcion } = attributes || {};
 
-    if (error) {
-      return <div>An error occured: {error.message - { datos }}</div>;
-    }
+  const { data: dataCategorias } = categorias || { data: null };
 
-    const info = this.state.datos.data?.attributes;
-
-    return (
-      <section className="back-final margin100">
+  return (
+    <>
+      <OverlayLoader loading={loading} />
+      {
+        content && categorias &&
+        <section className="back-final margin100">
         <Content>
-          <h1 className={`${info?.title.color} title h1-title`}>{info?.title.titulo}</h1>
-          <p>{info?.description}</p>
+          <h1 className={`${Titulo.Color} title h1-title`}>{Titulo.Titulo}</h1>
+          <p>{Descripcion}</p>
           <CategoryContain>
-            {info?.categories.data.map(category => (
-              <CategoryCard key={category.id} category={category} />
+            {dataCategorias.map((category) => (
+              <CategoryCard key={category.id} category={category.attributes} />
             ))}
           </CategoryContain>
         </Content>
       </section>
-    );
-  }
-}
+      }
+    </>
+  );
+};
+
+export default Categoria;

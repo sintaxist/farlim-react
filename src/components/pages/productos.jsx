@@ -19,8 +19,6 @@ const Productos = () => {
 
   const { data: categorias } = data || { data: [] };
 
-  console.log(categorias);
-
   return (
     <>
       <OverlayLoader loading={loading} />
