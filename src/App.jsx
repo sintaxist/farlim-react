@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from './components/Navbar';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/pages';
 import { Footer } from './components/footer';
 import ScrollToTop from './components/utils/ScrollToTop';
@@ -14,13 +14,13 @@ import Contacto from './components/pages/contacto';
 import Productos from './components/pages/productos';
 import { ProductDetail } from './components/pages/productDetails';
 
-function App () {
+function App() {
 
   return (
     <div id='page-container'>
       <Router>
         <ScrollToTop />
-        <Navbar/>
+        <Navbar />
         <div id="content-wrap">
           <Routes>
             <Route path="/" element={<Home />}></Route>

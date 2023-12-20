@@ -1,42 +1,63 @@
 import { Link } from 'react-router-dom';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import {Content} from './utils/UseElements';
-
-import { Logo, LogoMobile } from './Navbar/NavbarElements';
-
-import { getContent, urlAdmin } from './utils/httpClient';
+import { Content } from './utils/UseElements';
+import { getContent } from './utils/httpClient';
+import { LogoMobile } from './Navbar/NavbarElements';
 
 export const Footer = () => {
+    const [content, setContent] = useState(null);
 
-    const [content, setContent] = useState([]);
+    useEffect(() => {
+        getContent('footer?populate=Logo.Desktop,Logo.Mobile,Menu.Links')
+            .then((data) => {
+                setContent(data);
+            });
+    }, []);
 
-    useEffect(() =>{
-        getContent('footer?populate=*').then((data) => {
-            setContent(data)
-        });
-    }, [])
+    if (!content) {
+        return null;
+    }
 
-    return(
+    const { data } = content || { data: null };
+    const attributes = data?.attributes || {};
+    const { Logo, Menu } = attributes || {};
+
+    return (
+
+        data &&
         <FooterFlex>
             <Content>
                 <Link to='/' className='logo-footer'>
-                    <Logo src={urlAdmin + content?.data?.attributes.image.data.attributes.url} alt='logo'/>
-                    <LogoMobile className='logo-mobile' src={urlAdmin + content?.data?.attributes.imgMobile.data.attributes.url} alt='logo-mobile'/>
+                    <LogoFooter src={Logo.Desktop.data.attributes.url} alt='logo' />
+                    <LogoMobile className='logo-mobile' src={Logo.Mobile.data.attributes.url} alt='logo-mobile' />
                 </Link>
                 <MenuFooter>
-                    {content?.data?.attributes.links.data.map(link =>(
-                        <FooterLink key={link.id} to={link.attributes.link}>
-                        {link.attributes.linkName}
+                    {Menu.Links.filter(child => child.Show).map(link => (
+                        <FooterLink key={link.id} to={link.Path}>
+                            {link.Name}
                         </FooterLink>
                     ))}
                 </MenuFooter>
             </Content>
             <Address>Derechos Reservados 2022©</Address>
         </FooterFlex>
+
     )
 }
+
+const LogoFooter = styled.img`
+  display: block;
+  margin: auto;
+  padding: 0rem 6%;
+  height: auto;
+  width: 80%;
+  max-width: 250px;
+  @media(max-width:960px){
+    display: none;
+  }
+`;
 
 const FooterFlex = styled.footer`
     height: 24rem;

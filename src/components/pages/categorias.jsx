@@ -5,57 +5,50 @@ import { CategoryContain, Content } from "../utils/UseElements";
 import { OverlayLoader } from "./overlayLoading";
 
 const Categoria = () => {
-
   const [content, setContent] = useState(null);
-  const [categorias, setCategorias] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [categorias, setCategorias] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    const fetchData = async () => {
+      try {
+        const contentData = await getContent('categorias-page?populate=*');
+        const categoriasData = await getContent('categorias?populate=*');
 
-  const fetchData = async () => {
-    try{
-      await getContent('categorias-page?populate=*').then((data) => {
-        setContent(data)
+        setContent(contentData);
+        setCategorias(categoriasData);
         setLoading(false);
-      })
-      await getContent('categorias?populate=*').then((data) => {
-        setCategorias(data)
+      } catch (e) {
+        console.error(e);
         setLoading(false);
-      })
-    }catch (e){
-      console.error(e)
-    }finally{
-      content && categorias && setLoading(false)
-    }
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <OverlayLoader loading={loading} />;
   }
 
-  const { data } = content || { data: null };
-  const attributes = data?.attributes || {};
+  const { data: contentData } = content || { data: null };
+  const attributes = contentData?.attributes || {};
+  const { Titulo, Descripcion } = attributes;
 
-  const { Titulo, Descripcion } = attributes || {};
-
-  const { data: dataCategorias } = categorias || { data: null };
+  const { data: categoriasData } = categorias || { data: null };
 
   return (
-    <>
-      <OverlayLoader loading={loading} />
-      {
-        content && categorias &&
-        <section className="back-final margin100">
-        <Content>
-          <h1 className={`${Titulo.Color} title h1-title`}>{Titulo.Titulo}</h1>
-          <p>{Descripcion}</p>
-          <CategoryContain>
-            {dataCategorias.map((category) => (
-              <CategoryCard key={category.id} category={category.attributes} id={category.id}/>
-            ))}
-          </CategoryContain>
-        </Content>
-      </section>
-      }
-    </>
+    <section className="back-final margin100">
+      <Content>
+        <h1 className={`${Titulo?.Color} title h1-title`}>{Titulo?.Titulo}</h1>
+        <p>{Descripcion}</p>
+        <CategoryContain>
+          {categoriasData.map((category) => (
+            <CategoryCard key={category.id} category={category.attributes} id={category.id} />
+          ))}
+        </CategoryContain>
+      </Content>
+    </section>
   );
 };
 
